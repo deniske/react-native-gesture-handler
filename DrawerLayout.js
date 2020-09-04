@@ -129,6 +129,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
       touchX: touchXValue,
       drawerTranslation,
       containerWidth,
+      tempDrawerWidth
     } = state;
 
     let dragX = dragXValue;
@@ -233,7 +234,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
       nativeEvent.oldState === State.ACTIVE &&
       this.props.drawerLockMode !== 'locked-open'
     ) {
-      this.closeDrawer();
+      // this.closeDrawer();
     }
   };
 
@@ -242,6 +243,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     const { containerWidth } = this.state;
     let { translationX: dragX, velocityX, x: touchX } = nativeEvent;
 
+    // console.log('translationX',dragX,'velocityX',velocityX,'touchX',touchX)
     if (drawerPosition !== 'left') {
       // See description in _updateAnimatedEvent about why events are flipped
       // for right-side drawer
@@ -253,22 +255,77 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     const gestureStartX = touchX - dragX;
     let dragOffsetBasedOnStart = 0;
 
-    if (drawerType === 'front') {
-      dragOffsetBasedOnStart =
-        gestureStartX > drawerWidth ? gestureStartX - drawerWidth : 0;
-    }
-
+    // if (drawerType === 'front') {
+    //   dragOffsetBasedOnStart =
+    //     gestureStartX > drawerWidth ? gestureStartX - drawerWidth : 0;
+    // }
+    // console.log('gestureStartX',gestureStartX);
     const startOffsetX =
-      dragX + dragOffsetBasedOnStart + (this._drawerShown ? drawerWidth : 0);
+      dragX + dragOffsetBasedOnStart + (this._drawerShown ? this.state.tempDrawerWidth : 0);
     const projOffsetX = startOffsetX + DRAG_TOSS * velocityX;
+    var tempWidth;
+    this.setState({
+      tempDrawerWidth:projOffsetX
+    })
 
     const shouldOpen = projOffsetX > drawerWidth / 2;
-
-    if (shouldOpen) {
-      this._animateDrawer(startOffsetX, drawerWidth, velocityX);
-    } else {
-      this._animateDrawer(startOffsetX, 0, velocityX);
+    if(dragX<0){
+      if(projOffsetX>3*drawerWidth/4){
+        this.setState({
+          tempDrawerWidth:3*drawerWidth/4
+        })
+        tempWidth=3*drawerWidth/4
+      }else if(projOffsetX>2*drawerWidth/4){
+  
+        this.setState({
+          tempDrawerWidth:2*drawerWidth/4
+        })
+        tempWidth=2*drawerWidth/4;
+      }else if(projOffsetX>1*drawerWidth/4){
+  
+        this.setState({
+          tempDrawerWidth:1*drawerWidth/4
+        })
+        tempWidth=1*drawerWidth/4;
+      }else{
+        // console.log('velocity',velocityX)
+        this.setState({
+          tempDrawerWidth:0
+        })
+        tempWidth=0
+      }
+    }else{
+      if(projOffsetX>3*drawerWidth/4){
+        this.setState({
+          tempDrawerWidth:drawerWidth
+        })
+        tempWidth=drawerWidth
+      }else if(projOffsetX>2*drawerWidth/4){
+  
+        this.setState({
+          tempDrawerWidth:3*drawerWidth/4
+        })
+        tempWidth=3*drawerWidth/4;
+      }else if(projOffsetX>1*drawerWidth/4){
+  
+        this.setState({
+          tempDrawerWidth:2*drawerWidth/4
+        })
+        tempWidth=2*drawerWidth/4;
+      }else{
+        // console.log('velocity',velocityX)
+        this.setState({
+          tempDrawerWidth:1*drawerWidth/4
+        })
+        tempWidth=1*drawerWidth/4
+      }
     }
+
+    // if (shouldOpen) {
+    this._animateDrawer(startOffsetX, tempWidth, velocityX);
+    // } else {
+    //   this._animateDrawer(startOffsetX, 0, velocityX);
+    // }
   };
 
   _updateShowing = (showing: boolean) => {
@@ -347,6 +404,9 @@ export default class DrawerLayout extends Component<PropType, StateType> {
   };
 
   openDrawer = (options: DrawerMovementOptionType = {}) => {
+    this.setState({
+      tempDrawerWidth:this.props.drawerWidth
+    })
     this._animateDrawer(
       undefined,
       this.props.drawerWidth,
@@ -358,6 +418,9 @@ export default class DrawerLayout extends Component<PropType, StateType> {
   };
 
   closeDrawer = (options: DrawerMovementOptionType = {}) => {
+    this.setState({
+      tempDrawerWidth:0
+    })
     this._animateDrawer(undefined, 0, options.velocity ? options.velocity : 0);
 
     // We need to force the update, otherwise the overlay is not rerendered and it would be still clickable
