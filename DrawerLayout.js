@@ -270,23 +270,33 @@ export default class DrawerLayout extends Component<PropType, StateType> {
 
     const shouldOpen = projOffsetX > drawerWidth / 2;
     if(dragX<0){
-      if(projOffsetX>3*drawerWidth/4){
+      if(projOffsetX>5*drawerWidth/6){
         this.setState({
-          tempDrawerWidth:3*drawerWidth/4
+          tempDrawerWidth:5*drawerWidth/6
         })
-        tempWidth=3*drawerWidth/4
-      }else if(projOffsetX>2*drawerWidth/4){
+        tempWidth=5*drawerWidth/6
+      }else if(projOffsetX>4*drawerWidth/6){
+        this.setState({
+          tempDrawerWidth:4*drawerWidth/6
+        })
+        tempWidth=4*drawerWidth/6
+      }else if(projOffsetX>3*drawerWidth/6){
+        this.setState({
+          tempDrawerWidth:3*drawerWidth/6
+        })
+        tempWidth=3*drawerWidth/6
+      }else if(projOffsetX>2*drawerWidth/6){
   
         this.setState({
-          tempDrawerWidth:2*drawerWidth/4
+          tempDrawerWidth:2*drawerWidth/6
         })
-        tempWidth=2*drawerWidth/4;
-      }else if(projOffsetX>1*drawerWidth/4){
+        tempWidth=2*drawerWidth/6;
+      }else if(projOffsetX>1*drawerWidth/6){
   
         this.setState({
-          tempDrawerWidth:1*drawerWidth/4
+          tempDrawerWidth:1*drawerWidth/6
         })
-        tempWidth=1*drawerWidth/4;
+        tempWidth=1*drawerWidth/6;
       }else{
         // console.log('velocity',velocityX)
         this.setState({
@@ -295,29 +305,40 @@ export default class DrawerLayout extends Component<PropType, StateType> {
         tempWidth=0
       }
     }else{
-      if(projOffsetX>3*drawerWidth/4){
+      //-------- drag view to left , because drawer layout is on the right
+      if(projOffsetX>5*drawerWidth/6){
         this.setState({
           tempDrawerWidth:drawerWidth
         })
-        tempWidth=drawerWidth
-      }else if(projOffsetX>2*drawerWidth/4){
+        tempWidth=drawerWidth;
+      }else if(projOffsetX>4*drawerWidth/6){
+        this.setState({
+          tempDrawerWidth:5*drawerWidth/6
+        })
+        tempWidth=5*drawerWidth/6
+      }else if(projOffsetX>3*drawerWidth/6){
+        this.setState({
+          tempDrawerWidth:4*drawerWidth/6
+        })
+        tempWidth=4*drawerWidth/6
+      }else if(projOffsetX>2*drawerWidth/6){
   
         this.setState({
-          tempDrawerWidth:3*drawerWidth/4
+          tempDrawerWidth:3*drawerWidth/6
         })
-        tempWidth=3*drawerWidth/4;
-      }else if(projOffsetX>1*drawerWidth/4){
+        tempWidth=3*drawerWidth/6;
+      }else if(projOffsetX>1*drawerWidth/6){
   
         this.setState({
-          tempDrawerWidth:2*drawerWidth/4
+          tempDrawerWidth:2*drawerWidth/6
         })
-        tempWidth=2*drawerWidth/4;
+        tempWidth=2*drawerWidth/6;
       }else{
         // console.log('velocity',velocityX)
         this.setState({
-          tempDrawerWidth:1*drawerWidth/4
+          tempDrawerWidth:1*drawerWidth/6
         })
-        tempWidth=1*drawerWidth/4
+        tempWidth=1*drawerWidth/6
       }
     }
 
