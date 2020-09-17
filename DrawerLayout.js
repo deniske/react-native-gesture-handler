@@ -357,7 +357,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
       });
     this._pointerEventsView.current &&
       this._pointerEventsView.current.setNativeProps({
-        pointerEvents: showing ? 'auto' : 'none',
+        pointerEvents: showing ? 'box-none' : 'none',
       });
     const { drawerPosition, minSwipeDistance, edgeWidth } = this.props;
     const fromLeft = drawerPosition === 'left';
@@ -464,7 +464,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     return (
       <TapGestureHandler onHandlerStateChange={this._onTapHandlerStateChange}>
         <Animated.View
-          pointerEvents={this._drawerShown ? 'auto' : 'none'}
+          pointerEvents={this._drawerShown ? 'box-none' : 'none'}
           ref={this._pointerEventsView}
           style={[styles.overlay, dynamicOverlayStyles]}
         />
