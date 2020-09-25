@@ -235,7 +235,10 @@ export default class DrawerLayout extends Component<PropType, StateType> {
       nativeEvent.oldState === State.ACTIVE &&
       this.props.drawerLockMode !== 'locked-open'
     ) {
-      // this.closeDrawer();
+      if(!this.props.isChildCanControl){
+        this.closeDrawer();
+      }
+      // 
     }
   };
 
