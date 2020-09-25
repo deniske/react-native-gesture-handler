@@ -80,6 +80,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     minSwipeDistance: 3,
     overlayColor: 'rgba(0, 0, 0, 0.7)',
     drawerLockMode: 'unlocked',
+    isChildCanControl:true
   };
 
   static positions = {
@@ -269,84 +270,102 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     })
 
     const shouldOpen = projOffsetX > drawerWidth / 2;
-    if(dragX<0){
-      if(projOffsetX>5*drawerWidth/6){
-        this.setState({
-          tempDrawerWidth:5*drawerWidth/6
-        })
-        tempWidth=5*drawerWidth/6
-      }else if(projOffsetX>4*drawerWidth/6){
-        this.setState({
-          tempDrawerWidth:4*drawerWidth/6
-        })
-        tempWidth=4*drawerWidth/6
-      }else if(projOffsetX>3*drawerWidth/6){
-        this.setState({
-          tempDrawerWidth:3*drawerWidth/6
-        })
-        tempWidth=3*drawerWidth/6
-      }else if(projOffsetX>2*drawerWidth/6){
-  
-        this.setState({
-          tempDrawerWidth:2*drawerWidth/6
-        })
-        tempWidth=2*drawerWidth/6;
-      }else if(projOffsetX>1*drawerWidth/6){
-  
-        this.setState({
-          tempDrawerWidth:1*drawerWidth/6
-        })
-        tempWidth=1*drawerWidth/6;
-      }else{
-        // console.log('velocity',velocityX)
-        this.setState({
-          tempDrawerWidth:0
-        })
-        tempWidth=0
-      }
-    }else{
-      //-------- drag view to left , because drawer layout is on the right
-      if(projOffsetX>5*drawerWidth/6){
+    if(drawerPosition === 'left'){
+      if (shouldOpen) {
         this.setState({
           tempDrawerWidth:drawerWidth
+        },()=>{
+          this._animateDrawer(startOffsetX, drawerWidth, velocityX);
         })
-        tempWidth=drawerWidth;
-      }else if(projOffsetX>4*drawerWidth/6){
+        
+      } else {
         this.setState({
-          tempDrawerWidth:5*drawerWidth/6
+          tempDrawerWidth:0
+        },()=>{
+          this._animateDrawer(startOffsetX, 0, velocityX);
         })
-        tempWidth=5*drawerWidth/6
-      }else if(projOffsetX>3*drawerWidth/6){
-        this.setState({
-          tempDrawerWidth:4*drawerWidth/6
-        })
-        tempWidth=4*drawerWidth/6
-      }else if(projOffsetX>2*drawerWidth/6){
-  
-        this.setState({
-          tempDrawerWidth:3*drawerWidth/6
-        })
-        tempWidth=3*drawerWidth/6;
-      }else if(projOffsetX>1*drawerWidth/6){
-  
-        this.setState({
-          tempDrawerWidth:2*drawerWidth/6
-        })
-        tempWidth=2*drawerWidth/6;
-      }else{
-        // console.log('velocity',velocityX)
-        this.setState({
-          tempDrawerWidth:1*drawerWidth/6
-        })
-        tempWidth=1*drawerWidth/6
       }
+    }else{
+      if(dragX<0){
+        if(projOffsetX>5*drawerWidth/6){
+          this.setState({
+            tempDrawerWidth:5*drawerWidth/6
+          })
+          tempWidth=5*drawerWidth/6
+        }else if(projOffsetX>4*drawerWidth/6){
+          this.setState({
+            tempDrawerWidth:4*drawerWidth/6
+          })
+          tempWidth=4*drawerWidth/6
+        }else if(projOffsetX>3*drawerWidth/6){
+          this.setState({
+            tempDrawerWidth:3*drawerWidth/6
+          })
+          tempWidth=3*drawerWidth/6
+        }else if(projOffsetX>2*drawerWidth/6){
+    
+          this.setState({
+            tempDrawerWidth:2*drawerWidth/6
+          })
+          tempWidth=2*drawerWidth/6;
+        }else if(projOffsetX>1*drawerWidth/6){
+    
+          this.setState({
+            tempDrawerWidth:1*drawerWidth/6
+          })
+          tempWidth=1*drawerWidth/6;
+        }else{
+          // console.log('velocity',velocityX)
+          this.setState({
+            tempDrawerWidth:0
+          })
+          tempWidth=0
+        }
+      }else{
+        //-------- drag view to left , because drawer layout is on the right
+        if(projOffsetX>5*drawerWidth/6){
+          this.setState({
+            tempDrawerWidth:drawerWidth
+          })
+          tempWidth=drawerWidth;
+        }else if(projOffsetX>4*drawerWidth/6){
+          this.setState({
+            tempDrawerWidth:5*drawerWidth/6
+          })
+          tempWidth=5*drawerWidth/6
+        }else if(projOffsetX>3*drawerWidth/6){
+          this.setState({
+            tempDrawerWidth:4*drawerWidth/6
+          })
+          tempWidth=4*drawerWidth/6
+        }else if(projOffsetX>2*drawerWidth/6){
+    
+          this.setState({
+            tempDrawerWidth:3*drawerWidth/6
+          })
+          tempWidth=3*drawerWidth/6;
+        }else if(projOffsetX>1*drawerWidth/6){
+    
+          this.setState({
+            tempDrawerWidth:2*drawerWidth/6
+          })
+          tempWidth=2*drawerWidth/6;
+        }else{
+          // console.log('velocity',velocityX)
+          this.setState({
+            tempDrawerWidth:1*drawerWidth/6
+          })
+          tempWidth=1*drawerWidth/6
+        }
+      }
+  
+      // if (shouldOpen) {
+      this._animateDrawer(startOffsetX, tempWidth, velocityX);
+      // } else {
+      //   this._animateDrawer(startOffsetX, 0, velocityX);
+      // }
     }
 
-    // if (shouldOpen) {
-    this._animateDrawer(startOffsetX, tempWidth, velocityX);
-    // } else {
-    //   this._animateDrawer(startOffsetX, 0, velocityX);
-    // }
   };
 
   _updateShowing = (showing: boolean) => {
@@ -357,7 +376,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
       });
     this._pointerEventsView.current &&
       this._pointerEventsView.current.setNativeProps({
-        pointerEvents: showing ? 'box-none' : 'none',
+        pointerEvents: showing ?( this.props.isChildCanControl ? 'box-none' : 'auto' ): 'none',
       });
     const { drawerPosition, minSwipeDistance, edgeWidth } = this.props;
     const fromLeft = drawerPosition === 'left';
@@ -464,7 +483,7 @@ export default class DrawerLayout extends Component<PropType, StateType> {
     return (
       <TapGestureHandler onHandlerStateChange={this._onTapHandlerStateChange}>
         <Animated.View
-          pointerEvents={this._drawerShown ? 'box-none' : 'none'}
+          pointerEvents={this._drawerShown ? ( this.props.isChildCanControl ? 'box-none' : 'auto' ): 'none'}
           ref={this._pointerEventsView}
           style={[styles.overlay, dynamicOverlayStyles]}
         />
